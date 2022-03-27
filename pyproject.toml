@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "chat-manager-aiogram"
+version = "0.1.0"
+description = ""
+authors = ["Irishey <markirill21@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiogram = "^2.19"
+python-dotenv = "^0.20.0"
+httpx = "^0.22.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
