@@ -16,8 +16,8 @@ class ApiClient:
 
         try:
             resp = await client.request(
-                method, urljoin(self.root_url, path),
-                params=params, json=data,
+                method, urljoin(self.root_url, path) + '/',
+                params=data,
                 headers={'content-type': 'application/json'}
             )
 
@@ -35,12 +35,15 @@ class ApiClient:
                     f"Code: {resp.status_code}")
         finally:
             await client.aclose()
-        
-        result = resp_json.get('result', {})
-        return result.get('data', {}) or result
+
+        return resp_json
     
-    async def get(self, path, params=None):
-        return await self.request('get', path)
+    async def get(self, path, data=None, params=None):
+        if data:
+            if not (data['type'] == 'telegram' or data['type'] == 'pk'):
+                raise ApiError(f'Type is incorrect. There are two types:\
+                                telegram, pk. Got {data["type"]}')
+        return await self.request('get', path, data=data)
     
     async def post(self, path, data, params=None):
         return await self.request('post', path, data=data)

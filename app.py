@@ -14,6 +14,12 @@ bot = Bot(token=os.getenv('API_TOKEN'))
 print(os.getenv('API_TOKEN'))
 dp = Dispatcher(bot)
 
+async def user_in_db(id):
+    user = await user_methods.get_user(id, 'telegram')
+    if user:
+        return True
+    return False
+
 
 @dp.message_handler(commands=['start'])
 async def send_welocome(message: types.Message):
@@ -22,15 +28,20 @@ async def send_welocome(message: types.Message):
 
 @dp.message_handler()
 async def log(message: types.Message):
-    if message.text.lower() == 'Show users':
-        print(await user_methods.get_users())
-    
-    elif message.text.lower() == 'add me':
-        user_id = message['from']['id']
-        username = message['from']['username']
-        nickname = message['from']['first_name']
+    user_id = message['from']['id']
+    username = message['from']['username']
+    nickname = message['from']['first_name']
+    text = message.text
+
+    if not await user_in_db(user_id):
         await user_methods.add_user(id=user_id, username=username,
                                     nickname=nickname)
+
+    await user_methods.send_message(id=user_id, text=text,
+                                        nickname=nickname)
+
+    if message.text.lower() == 'show users':
+        print(await user_methods.get_users())
 
 
 if __name__ == '__main__':
