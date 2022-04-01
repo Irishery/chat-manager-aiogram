@@ -9,6 +9,7 @@ python = "^3.10"
 aiogram = "^2.19"
 python-dotenv = "^0.20.0"
 httpx = "^0.22.0"
+Flask = {extras = ["async"], version = "^2.1.1"}
 
 [tool.poetry.dev-dependencies]
 

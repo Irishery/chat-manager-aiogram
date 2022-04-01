@@ -1,4 +1,4 @@
-from .base import ApiClient
+from .base_client import ApiClient
 
 class User:
     def __init__(self, api: ApiClient = None):
@@ -29,4 +29,4 @@ class User:
             'message_text': text,
             'nickname': nickname
         }
-        return await self.api.post('message', data=data)
+        return await self.api.post('message/user', data=data)
