@@ -1,4 +1,4 @@
-from .base_client import ApiClient
+from .base_client import ApiClient, ApiError
 
 class User:
     def __init__(self, api: ApiClient = None):
@@ -12,6 +12,9 @@ class User:
             'id': id,
             'type': type
         }
+        if not (data['type'] == 'telegram' or data['type'] == 'pk'):
+                raise ApiError(f'Type is incorrect. There are two types:\
+                                telegram, pk. Got {data["type"]}')
         return await self.api.get('user', data=data)
 
     
