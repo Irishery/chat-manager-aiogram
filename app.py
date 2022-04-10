@@ -1,8 +1,6 @@
 import logging
 import os
-import asyncio
 
-from asyncio import new_event_loop, set_event_loop, get_event_loop
 from threading import Thread
 from aiogram import Bot, Dispatcher, executor, types
 from dotenv import load_dotenv
@@ -47,21 +45,12 @@ async def log(message: types.Message):
     if message.text.lower() == 'show users':
         print(await user_methods.get_users())
 
-async def on_startup(_):
-    await asyncio.create_task(msgs_handler.run(host="127.0.0.1", port=8181))
-
 
 if __name__ == '__main__':
-    # set_event_loop(new_event_loop())
-    # thread = Thread(target=executor.start_polling, args=(dp,),
-                    # kwargs={'skip_updates': True})
-    # thread.start()
+
     therad = Thread(target=msgs_handler.run, kwargs={'host': '127.0.0.1',
                                                      'port': 8181, 
                                                      'debug': True,
                                                      'use_reloader': False})
     therad.start()
-    # loop = get_event_loop()
-    # loop.create_task(msgs_handler.run(host="127.0.0.1", port=8181))
     executor.start_polling(dp, skip_updates=True)
-    # msgs_handler.run()

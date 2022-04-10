@@ -12,7 +12,7 @@ class ApiClient:
         self.root_url = root_url
 
     async def request(self, method, path, params=None, data=None):
-        client = httpx.AsyncClient()
+        client = httpx.AsyncClient(timeout=None)
 
         try:
             resp = await client.request(
