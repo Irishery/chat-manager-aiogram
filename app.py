@@ -1,3 +1,4 @@
+from base64 import encodebytes
 import logging
 import os
 
@@ -38,6 +39,14 @@ async def log(message: types.Message):
     if not await user_in_db(user_id):
         await user_methods.add_user(id=user_id, username=username,
                                     nickname=nickname)
+        user_photos = await bot.get_user_profile_photos(user_id, limit=1)
+        if user_photos['total_count']:
+            file_id = user_photos['photos'][0][0]['file_id']
+            file = await bot.get_file(file_id)
+            file_path = file.file_path
+            image = await bot.download_file(file_path)
+            im_b64 = encodebytes(image.read()).decode("utf-8")
+            await user_methods.send_pic(im_b64, {'telegram_id': user_id})
 
     await user_methods.send_message(id=user_id, text=text,
                                         nickname=nickname)

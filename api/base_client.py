@@ -1,7 +1,5 @@
-import json
-
 from urllib.parse import urljoin
-
+import json
 import httpx
 
 class ApiError(Exception):
@@ -11,15 +9,24 @@ class ApiClient:
     def __init__(self, root_url):
         self.root_url = root_url
 
-    async def request(self, method, path, params=None, data=None):
+    async def request(self, method, path, params=None, data=None, json=None,
+                                                       picture=None):
         client = httpx.AsyncClient(timeout=None)
-
         try:
-            resp = await client.request(
-                method, urljoin(self.root_url, path) + '/',
-                params=data,
-                headers={'content-type': 'application/json'}
-            )
+            if picture:
+                resp = await client.request(
+                    method, urljoin(self.root_url, path) + '/',
+                    params=params,
+                    data=picture,
+                    headers={'content-type': 'application/json'}
+                )
+                
+            else:
+                resp = await client.request(
+                    method, urljoin(self.root_url, path) + '/',
+                    params=params,
+                    headers={'content-type': 'application/json'}
+                )
 
             resp_json = resp.json()
 
@@ -39,7 +46,8 @@ class ApiClient:
         return resp_json
     
     async def get(self, path, data=None, params=None):
-        return await self.request('get', path, data=data)
+        return await self.request('get', path, data=data, params=params)
     
-    async def post(self, path, data, params=None):
-        return await self.request('post', path, data=data)
+    async def post(self, path, data=None, params=None, json=None, picture=None):
+        return await self.request('post', path, data=data, json=json,
+                                params=params, picture=picture)

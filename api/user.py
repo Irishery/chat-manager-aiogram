@@ -15,7 +15,7 @@ class User:
         if not (data['type'] == 'telegram' or data['type'] == 'pk'):
                 raise ApiError(f'Type is incorrect. There are two types:\
                                 telegram, pk. Got {data["type"]}')
-        return await self.api.get('user', data=data)
+        return await self.api.get('user', params=data)
 
     
     async def add_user(self, id, username, nickname=None):
@@ -24,7 +24,7 @@ class User:
             'username': username,
             'nickname': nickname
         }
-        return await self.api.post('user', data=data)
+        return await self.api.post('user', params=data)
     
     async def send_message(self, id, text, nickname):
         data = {
@@ -32,4 +32,7 @@ class User:
             'message_text': text,
             'nickname': nickname
         }
-        return await self.api.post('message/user', data=data)
+        return await self.api.post('message/user', params=data)
+
+    async def send_pic(self, pic, params):
+        return await self.api.post('user/pic', picture=pic, params=params)
