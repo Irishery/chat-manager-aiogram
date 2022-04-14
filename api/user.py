@@ -22,8 +22,7 @@ class User:
         data = {
             'telegram_id': id,
             'username': username,
-            'nickname': nickname,
-            'number': number
+            'nickname': nickname
         }
         return await self.api.post('user', params=data)
     

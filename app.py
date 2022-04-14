@@ -19,9 +19,10 @@ dp = Dispatcher(bot)
 
 async def user_in_db(id):
     user = await user_methods.get_user(id, 'telegram')
-    if user['is_banned']:
-        return 'banned'
+    
     if user:
+        if user['is_banned']:
+            return 'banned'
         return True
     return False
 
