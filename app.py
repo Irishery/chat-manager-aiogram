@@ -19,6 +19,8 @@ dp = Dispatcher(bot)
 
 async def user_in_db(id):
     user = await user_methods.get_user(id, 'telegram')
+    if user['is_banned']:
+        return 'banned'
     if user:
         return True
     return False
@@ -36,7 +38,10 @@ async def log(message: types.Message):
     nickname = message['from']['first_name']
     text = message.text
 
-    if not await user_in_db(user_id):
+    check_user = await user_in_db(user_id)
+    if not check_user or check_user == 'banned':
+        if check_user == 'banned':
+            return await bot.send_message(user_id, 'Вы забанены)')
         await user_methods.add_user(id=user_id, username=username,
                                     nickname=nickname)
         user_photos = await bot.get_user_profile_photos(user_id, limit=1)

@@ -18,11 +18,12 @@ class User:
         return await self.api.get('user', params=data)
 
     
-    async def add_user(self, id, username, nickname=None):
+    async def add_user(self, id, username, nickname=None, number=None):
         data = {
             'telegram_id': id,
             'username': username,
-            'nickname': nickname
+            'nickname': nickname,
+            'number': number
         }
         return await self.api.post('user', params=data)
     
