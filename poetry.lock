@@ -307,6 +307,14 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "typing-extensions"
+version = "4.2.0"
+description = "Backported and Experimental Type Hints for Python 3.7+"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "werkzeug"
 version = "2.1.0"
 description = "The comprehensive WSGI web application library."
@@ -332,7 +340,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "2331f80217bf2785e63b064d6ee46ad77e8b1ecaa2402e0ee8f924d8ea656b90"
+content-hash = "5456cf7524cbf3d4a4a091ac560cd139db5169f560243a5d0a62011771eeb9a3"
 
 [metadata.files]
 aiogram = [
@@ -660,6 +668,10 @@ rfc3986 = [
 sniffio = [
     {file = "sniffio-1.2.0-py3-none-any.whl", hash = "sha256:471b71698eac1c2112a40ce2752bb2f4a4814c22a54a3eed3676bc0f5ca9f663"},
     {file = "sniffio-1.2.0.tar.gz", hash = "sha256:c4666eecec1d3f50960c6bdf61ab7bc350648da6c126e3cf6898d8cd4ddcd3de"},
+]
+typing-extensions = [
+    {file = "typing_extensions-4.2.0-py3-none-any.whl", hash = "sha256:6657594ee297170d19f67d55c05852a874e7eb634f4f753dbd667855e07c1708"},
+    {file = "typing_extensions-4.2.0.tar.gz", hash = "sha256:f1c24655a0da0d1b67f07e17a5e6b2a105894e6824b92096378bb3668ef02376"},
 ]
 werkzeug = [
     {file = "Werkzeug-2.1.0-py3-none-any.whl", hash = "sha256:094ecfc981948f228b30ee09dbfe250e474823b69b9b1292658301b5894bbf08"},

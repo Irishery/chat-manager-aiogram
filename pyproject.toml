@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "chat-manager-aiogram"
+name = "tt-bot"
 version = "0.1.0"
 description = ""
 authors = ["Irishey <markirill21@gmail.com>"]
@@ -10,6 +10,16 @@ aiogram = "^2.19"
 python-dotenv = "^0.20.0"
 httpx = "^0.22.0"
 Flask = {extras = ["async"], version = "^2.1.1"}
+async-timeout = "^4.0.2"
+Babel = "^2.9.1"
+pytz = "^2022.1"
+yarl = "^1.7.2"
+aiohttp = "^3.8.1"
+attrs = "^21.4.0"
+certifi = "^2021.10.8"
+idna = "^3.3"
+multidict = "^6.0.2"
+typing-extensions = "^4.2.0"
 
 [tool.poetry.dev-dependencies]
 

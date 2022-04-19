@@ -13,5 +13,6 @@ msgs_handler = Flask(__name__)
 @msgs_handler.route('/send_message/', methods=['POST'])
 async def post_message():
     data = request.args.to_dict()
-    await bot.send_message(data['telegram_id'], data['message_text'])
+    await bot.send_message(data['telegram_id'],
+                        f'Сообщение от менеджера:\n{data["message_text"]}')
     return {'status': 'ok'}
