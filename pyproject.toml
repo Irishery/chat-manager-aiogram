@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "tt-bot"
+name = "chat-manager-aiogram"
 version = "0.1.0"
 description = ""
 authors = ["Irishey <markirill21@gmail.com>"]

@@ -96,7 +96,7 @@ def add_reviews(number):
 
 def chat_state():
     keyboard = types.InlineKeyboardMarkup(resize_keyboard=True)
-    row = [types.InlineKeyboardButton(text='Завершить общение', callback_data='stop_chatting')]
+    row = [types.InlineKeyboardButton(text='Назад', callback_data='stop_chatting')]
     keyboard.row(*row)
     return keyboard
 
@@ -107,3 +107,9 @@ def call_state():
     keyboard.row(*row)
     return keyboard
 
+
+def main():
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    row = types.KeyboardButton(text='/main', callback_data='stop_chatting')
+    keyboard.row(row)
+    return keyboard

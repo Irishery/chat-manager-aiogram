@@ -5,8 +5,10 @@ def see_rew(number_file_read):
     with open(f"data/reviews{number_file_read}.csv", encoding='utf-8') as r_file:
         file_reader = csv.reader(r_file, delimiter=",")
         dtk = []
+        print('ok1')
         for row in file_reader:
             dtk.append([row[0], row[1]])
+        print('ok2')
         return dtk
 
 

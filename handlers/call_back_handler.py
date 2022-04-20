@@ -3,6 +3,7 @@ from misc import *
 import csv
 import funk
 import keyboard
+from api import user_methods
 
 
 users = []
@@ -102,14 +103,17 @@ async def callback_btn(call: types.CallbackQuery, state: FSMContext):
         await call.answer()
 
     elif data[0] == "option":
+        print(data)
         number_file_read = data[1]
         try:
             pag = True
             all_reviews = funk.see_rew(number_file_read)
             rev = all_reviews[0]
             reviews = funk.sort_reviews(all_reviews)
+            print('ok3')
             if len(all_reviews) <= 3:
                 pag = False
+                print('ok4')
                 await bot.delete_message(id_user, message_id=call.message.message_id)
                 await bot.send_photo(id_user, rev[0], rev[1],
                                      reply_markup=keyboard.pagination(number=0,
@@ -118,6 +122,9 @@ async def callback_btn(call: types.CallbackQuery, state: FSMContext):
                                                                       prew='1',
                                                                       pag=pag))
             else:
+                print('ok4')
+                print(rev[0], '|', rev[1])
+                print(rev)
                 await bot.delete_message(id_user, message_id=call.message.message_id)
                 await bot.send_photo(id_user, rev[0], rev[1],
                                      reply_markup=keyboard.pagination(number=0,
@@ -127,7 +134,8 @@ async def callback_btn(call: types.CallbackQuery, state: FSMContext):
                                                                       pag=pag))
             await call.answer()
 
-        except:
+        except Exception as e:
+            print("asdasd", e)
             await call.answer('Нет отзывов', )
 
     elif data[0] == "main_menu":
@@ -157,8 +165,15 @@ async def callback_btn(call: types.CallbackQuery, state: FSMContext):
         await call.message.answer(
             'Спасибо мы приняли вашу заявку, ожидайте звонок от нас',
             reply_markup=keyboard.menu_back())
-        async with state.proxy() as data:
-            await bot.send_message(-1001624336092, "{} \n\nзаявку отправил:\nUserId: {}\nName: {}\nUserName: @{}".format(data['text'], id_user, data['fname'], data['uname']))
+        
+        user_message = call.message.reply_to_message.text
+        user = call.message.reply_to_message['from']
+
+        # async with state.proxy() as data:
+            # await bot.send_message(-1001624336092, "{} \n\nзаявку отправил:\nUserId: {}\nName: {}\nUserName: @{}".format(user_message, user.id, user['first_name'], user['username']))
+
+        await user_methods.send_message(id=user.id, text=("{} \n\nзаявку отправил:\nUserId: {}\nName: {}\nUserName: @{}".format(user_message, user.id, user['first_name'], user['username'])),
+                                    nickname=user['first_name'], is_call=True)
         await state.finish()
 
     elif data[0] == "feedback":
