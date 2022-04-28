@@ -3,6 +3,16 @@ from misc import *
 import keyboard
 from config import ADMIN
 
+@dp.message_handler()
+async def main_page_filter(message: types.Message):
+    id_user = (str(message.from_user.id))
+
+    if message.text == 'Главная':
+        await message.answer('Выберите и нажмите на кнопку ниже!', reply_markup=keyboard.menu_start())
+    
+    await bot.delete_message(id_user, message_id=message.message_id)
+
+
 @dp.message_handler(content_types=types.ContentType.PHOTO)
 async def photo_step(message):
     photo_id = message.photo[-1].file_id

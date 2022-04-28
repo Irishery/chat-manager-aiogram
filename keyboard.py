@@ -110,6 +110,6 @@ def call_state():
 
 def main():
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    row = types.KeyboardButton(text='/main', callback_data='stop_chatting')
+    row = types.KeyboardButton(text='Главная', callback_data='stop_chatting')
     keyboard.row(row)
     return keyboard
