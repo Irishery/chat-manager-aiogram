@@ -9,7 +9,7 @@ def menu_start():
     keyboard.add(
         types.InlineKeyboardButton(text='🎓 Перейти в академию', url="https://tt.academy?utm_source=reviewbot"))
     keyboard.add(types.InlineKeyboardButton(text='📩 Написать нам', callback_data='feedback'))
-    keyboard.add(types.InlineKeyboardButton(text='📞 Запросить звонок', callback_data='callme'))
+    keyboard.add(types.InlineKeyboardButton(text='📞 Запросить звонок', callback_data='callme_name'))
     return keyboard
 
 
@@ -38,7 +38,7 @@ def menu_review():
     keyboard.add(types.InlineKeyboardButton(text="DayTrading Futures", callback_data="option;4"))
     keyboard.add(types.InlineKeyboardButton(text="DeFi", callback_data="option;5"))
     keyboard.add(types.InlineKeyboardButton(text="Инсайт", callback_data="option;6"))
-    keyboard.add(types.InlineKeyboardButton(text='⬅️ Назад', callback_data='menu_back'))
+    keyboard.add(types.InlineKeyboardButton(text="⬅️ Наaзад", callback_data="menu_back"))
     return keyboard
 
 
@@ -65,7 +65,7 @@ def pagination(number, len_rew, number_file_read, prew, pag=True):
         row.append(types.InlineKeyboardButton(text=">", callback_data=f"next_post;{number};{number_file_read};{prew}"))
         keyboard.row(*row)
         row = [types.InlineKeyboardButton(text='⬅️ Назад',
-                                          callback_data='main_menu')]
+                                          callback_data='review_back')]
         keyboard.row(*row)
     else:
         keyboard = types.InlineKeyboardMarkup()
@@ -81,8 +81,15 @@ def pagination(number, len_rew, number_file_read, prew, pag=True):
                                                       callback_data=f'see_rew;{numbers[i]};{number};{number_file_read};{prew}'))
         keyboard.row(*row)
         keyboard.add(types.InlineKeyboardButton(text='⬅️ Назад',
-                                                callback_data='main_menu'))
+                                                callback_data='review_back'))
 
+    return keyboard
+
+
+def number_request():
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    button = types.KeyboardButton("Поделиться номером", request_contact=True)
+    keyboard.add(button)
     return keyboard
 
 
@@ -103,7 +110,7 @@ def chat_state():
 
 def call_state():
     keyboard = types.InlineKeyboardMarkup(resize_keyboard=True)
-    row = [types.InlineKeyboardButton(text='Отменить', callback_data='stop_chatting')]
+    row = [types.InlineKeyboardButton(text='Отменить', callback_data='stop_call')]
     keyboard.row(*row)
     return keyboard
 

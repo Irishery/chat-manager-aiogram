@@ -2,7 +2,7 @@ from aiogram import types
 from misc import *
 from base64 import encodebytes
 from api import user_methods
-
+import keyboard
 
 async def user_in_db(id):
     user = await user_methods.get_user(id, 'telegram')
@@ -15,11 +15,16 @@ async def user_in_db(id):
 
 
 @dp.message_handler(state=Form.feedback)
-async def log(message: types.Message):
+async def log(message: types.Message, state: FSMContext):
     user_id = message['from']['id']
     username = message['from']['username']
     nickname = message['from']['first_name']
     text = message.text
+
+    if text == 'Главная':
+        await state.finish()
+        await message.answer('Чат прерван. Чтобы опять связаться с нашим менеджером, нажмите кнопку «Написать нам.».')
+        await message.answer('Выберите и нажмите на кнопку ниже!', reply_markup=keyboard.menu_start())
 
     check_user = await user_in_db(user_id)
     if not check_user or check_user == 'banned':
@@ -35,6 +40,6 @@ async def log(message: types.Message):
             image = await bot.download_file(file_path)
             im_b64 = encodebytes(image.read()).decode("utf-8")
             await user_methods.send_pic(im_b64, {'telegram_id': user_id})
-    
+    print(message['from'])
     await user_methods.send_message(id=user_id, text=text,
                                         nickname=nickname, is_call=False)

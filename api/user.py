@@ -26,12 +26,14 @@ class User:
         }
         return await self.api.post('user', params=data)
     
-    async def send_message(self, id, text, nickname, is_call):
+    async def send_message(self, id, text, nickname, is_call, name=None, contact=None):
         data = {
             'telegram_id': id,
             'message_text': text,
             'nickname': nickname,
-            'request_to_call': is_call
+            'request_to_call': is_call,
+            'name': name,
+            'contact': contact
         }
         return await self.api.post('message/user', params=data)
 

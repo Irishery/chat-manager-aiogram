@@ -9,7 +9,9 @@ storage = MemoryStorage()
 
 
 class Form(StatesGroup):
-    callme = State()
+    callme_name = State()
+    callme_subject = State()
+    callme_number = State()
     feedback = State()
 
 
