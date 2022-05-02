@@ -21,7 +21,7 @@ async def log(message: types.Message, state: FSMContext):
     nickname = message['from']['first_name']
     text = message.text
 
-    if text == 'Главная':
+    if text == 'Главная' or text == '/start':
         await state.finish()
         await message.answer('Чат прерван. Чтобы опять связаться с нашим менеджером, нажмите кнопку «Написать нам.».')
         await message.answer('Выберите и нажмите на кнопку ниже!', reply_markup=keyboard.menu_start())
@@ -31,7 +31,7 @@ async def log(message: types.Message, state: FSMContext):
         if check_user == 'banned':
             return await bot.send_message(user_id, 'Вы забанены')
         await user_methods.add_user(id=user_id, username=username,
-                                    nickname=nickname, is_call=False)
+                                    nickname=nickname)
         user_photos = await bot.get_user_profile_photos(user_id, limit=1)
         if user_photos['total_count']:
             file_id = user_photos['photos'][0][0]['file_id']

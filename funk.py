@@ -2,18 +2,19 @@ import csv
 
 
 def see_rew(number_file_read):
-    with open(f"data/reviews{number_file_read}.csv", encoding='utf-8') as r_file:
+    with open(f"../reviewbot/data/reviews{number_file_read}.csv", encoding='utf-8') as r_file:
         file_reader = csv.reader(r_file, delimiter=",")
         dtk = []
         print('ok1')
         for row in file_reader:
+            print(row)
             dtk.append([row[0], row[1]])
         print('ok2')
         return dtk
 
 
 def see_rew_dict(number_file_write):
-    with open(f"data/reviews{number_file_write}.csv", encoding='utf-8') as r_file:
+    with open(f"../reviewbot/data/reviews{number_file_write}.csv", encoding='utf-8') as r_file:
         file_reader = csv.reader(r_file, delimiter=",")
         dtk = {}
         for row in file_reader:
@@ -24,7 +25,7 @@ def see_rew_dict(number_file_write):
 def add_post(file_id, caption, number_file_write):
     rev = see_rew_dict(number_file_write)
     if file_id not in rev:
-        with open(f'data/reviews{number_file_write}.csv', 'a') as csvFile:
+        with open(f'../reviewbot/data/reviews{number_file_write}.csv', 'a') as csvFile:
             row = [file_id, caption]
             writer = csv.writer(csvFile)
             writer.writerow(row)
@@ -32,7 +33,7 @@ def add_post(file_id, caption, number_file_write):
 
 
 def write_new_post(file_id, caption, number_file_write):
-    with open(f'data/reviews{number_file_write}.csv', 'w') as csvFile:
+    with open(f'../reviewbot/data/reviews{number_file_write}.csv', 'w') as csvFile:
         row = [file_id, caption]
         writer = csv.writer(csvFile)
         writer.writerow(row)

@@ -161,7 +161,7 @@ async def callback_btn(call: types.CallbackQuery, state: FSMContext):
     elif data[0] == "callme_name":
         await bot.delete_message(id_user, message_id=call.message.message_id)
         await call.message.answer(
-            'Ответье на 3 вопроса',
+            'Ответьте на вопросы ниже, чтобы оставить заявку на звонок. Если хотите вернуться, то нажмите кнопку «Отменить»',
             reply_markup=keyboard.call_state())
         await call.message.answer('Как вас зовут?')
         await Form.callme_name.set()
@@ -204,7 +204,7 @@ async def callback_btn(call: types.CallbackQuery, state: FSMContext):
     elif data[0] == "sendtogroup":
         await bot.delete_message(id_user, message_id=call.message.message_id)
         await call.message.answer(
-            'Спасибо мы приняли вашу заявку, ожидайте звонок от нас',
+            'Спасибо. Мы приняли вашу заявку, ожидайте звонок. Обычно мы перезваниваем в течение 12-24 часов, но в связи с большим кол-вом заявок могут быть задержки.',
             reply_markup=keyboard.main())
 #        for msg in msgs_to_del[id_user]:
 #            await bot.delete_message(id_user, message_id=msg)
