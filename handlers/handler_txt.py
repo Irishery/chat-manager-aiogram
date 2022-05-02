@@ -51,14 +51,17 @@ async def contact_handler(message,  state: FSMContext):
     else:
         call_requests[id_user] = {'contact': f'{message.contact.phone_number}', 'name': '', 'subject': ''}
     
-    await message.answer('Спасибо. И последнее: по какому вопросу/теме обращаетесь?')
+    await message.answer('Спасибо. И последнее: по какому вопросу/теме обращаетесь?', reply_markup=keyboard.main())
     await Form.callme_subject.set()
 
 
 @dp.message_handler(content_types=['text'], state=Form.callme_number)
 async def contact_handler_text(message: types.Message, state: FSMContext):
     id_user = (str(message.from_user.id))
-    print(message.text)
+    if message.text == 'Главная':
+        await message.answer('Выберите и нажмите на кнопку ниже!', reply_markup=keyboard.menu_start())
+        await state.finish()
+        return
     try:
         number = phonenumbers.parse(message.text)
     except phonenumbers.NumberParseException:
@@ -70,7 +73,7 @@ async def contact_handler_text(message: types.Message, state: FSMContext):
         else:
             call_requests[id_user] = {'contact': f'{message.text}', 'name': '', 'subject': ''}
 
-        await message.answer('Спасибо. И последнее: по какому вопросу/теме обращаетесь?')
+        await message.answer('Спасибо. И последнее: по какому вопросу/теме обращаетесь?', reply_markup=keyboard.main())
         await Form.callme_subject.set()
 
     else:
@@ -92,6 +95,10 @@ async def contact_handler_text(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Form.callme_name)
 async def get_name(message: types.Message, state: FSMContext):
     user = types.User.get_current()
+    if message.text == 'Главная':
+        await message.answer('Выберите и нажмите на кнопку ниже!', reply_markup=keyboard.menu_start())
+        await state.finish()
+        return
     id_user = (str(message.from_user.id))
     print(message.text)
     if id_user in call_requests.keys():
@@ -105,6 +112,10 @@ async def get_name(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=Form.callme_subject)
 async def get_subject(message: types.Message, state: FSMContext):
+    if message.text == 'Главная':
+        await message.answer('Выберите и нажмите на кнопку ниже!', reply_markup=keyboard.menu_start())
+        await state.finish()
+        return
     user = types.User.get_current()
     id_user = (str(message.from_user.id))
     if id_user in call_requests.keys():
