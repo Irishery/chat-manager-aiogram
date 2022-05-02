@@ -1,5 +1,6 @@
 from aiogram import types
 from misc import *
+from .manager_chat import users_in_chat
 import csv
 import funk
 import keyboard
@@ -222,6 +223,8 @@ async def callback_btn(call: types.CallbackQuery, state: FSMContext):
         await state.finish()
 
     elif data[0] == "feedback":
+        if str(id_user) not in users_in_chat.keys():
+            users_in_chat[str(id_user)] = True
         await bot.edit_message_text('Напишите ваш вопрос и мы ответим вам в ближайшее время.\nОбычно мы отвечаем в течение дня, но в связи с большим кол-вом заявок ответ может задержаться', call.message.chat.id, call.message.message_id)
         await bot.edit_message_reply_markup(call.message.chat.id,
                                     call.message.message_id,
@@ -229,6 +232,10 @@ async def callback_btn(call: types.CallbackQuery, state: FSMContext):
         await Form.feedback.set()
     
     elif data[0] == "stop_chatting":
+        try:
+            users_in_chat.pop(str(id_user))
+        except KeyError:
+            pass
         await bot.delete_message(id_user, message_id=call.message.message_id)
         await bot.send_message(id_user, 'Чат прерван. Чтобы опять связаться с нашим менеджером, нажмите кнопку «Написать нам.». ')
         await call.message.answer(
