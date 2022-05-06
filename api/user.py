@@ -12,10 +12,14 @@ class User:
             'id': id,
             'type': type
         }
+        print('getting user')
         if not (data['type'] == 'telegram' or data['type'] == 'pk'):
                 raise ApiError(f'Type is incorrect. There are two types:\
                                 telegram, pk. Got {data["type"]}')
-        return await self.api.get('user', params=data)
+        user = await self.api.get('user', params=data)
+        print(user)
+        print('got it')
+        return user
 
     
     async def add_user(self, id, username, nickname=None, number=None):

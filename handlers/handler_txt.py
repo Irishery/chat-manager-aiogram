@@ -11,7 +11,7 @@ call_requests = {}
 async def main_page_filter(message: types.Message, state: FSMContext):
     id_user = (str(message.from_user.id))
 
-    if message.text == 'Главная':
+    if message.text == 'Главная' or message.text == '/start':
         await message.answer('Выберите и нажмите на кнопку ниже!', reply_markup=keyboard.menu_start())
         await state.finish()
         return
@@ -58,7 +58,8 @@ async def contact_handler(message,  state: FSMContext):
 @dp.message_handler(content_types=['text'], state=Form.callme_number)
 async def contact_handler_text(message: types.Message, state: FSMContext):
     id_user = (str(message.from_user.id))
-    if message.text == 'Главная':
+    if message.text == 'Главная' or message.text == '/start':
+        await message.answer('Запрос отменен', reply_markup=keyboard.main())
         await message.answer('Выберите и нажмите на кнопку ниже!', reply_markup=keyboard.menu_start())
         await state.finish()
         return
@@ -95,7 +96,7 @@ async def contact_handler_text(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Form.callme_name)
 async def get_name(message: types.Message, state: FSMContext):
     user = types.User.get_current()
-    if message.text == 'Главная':
+    if message.text == 'Главная' or message.text == '/start':
         await message.answer('Выберите и нажмите на кнопку ниже!', reply_markup=keyboard.menu_start())
         await state.finish()
         return
@@ -106,13 +107,13 @@ async def get_name(message: types.Message, state: FSMContext):
     else:
         call_requests[id_user] = {'contact': '', 'name': f'{message.text}', 'subject': ''}
     print(call_requests)
-    await message.answer('Отлично. Оставьте нам свой телефон, чтобы мы с вами связались', reply_markup=keyboard.number_request())
+    await message.answer('Отлично. Оставьте нам свой номер телефона, чтобы мы с вами связались.', reply_markup=keyboard.number_request())
     await Form.callme_number.set()
 
 
 @dp.message_handler(state=Form.callme_subject)
 async def get_subject(message: types.Message, state: FSMContext):
-    if message.text == 'Главная':
+    if message.text == 'Главная' or message.text == '/start':
         await message.answer('Выберите и нажмите на кнопку ниже!', reply_markup=keyboard.menu_start())
         await state.finish()
         return
@@ -133,4 +134,4 @@ async def get_subject(message: types.Message, state: FSMContext):
     markup = types.InlineKeyboardMarkup(row_width=2)
     markup.add(types.InlineKeyboardButton(text='Изменить', callback_data='callme_name'))
     markup.add(types.InlineKeyboardButton(text='Отправить', callback_data='sendtogroup'))
-    await message.reply("Внимательно проверьте вашу заявку перед отправкой", reply_markup=markup)
+    await message.reply(f'Внимательно проверьте вашу заявку перед отправкой\nИмя: {call_requests[f"{user.id}"]["name"]}\nТелефон: {call_requests[f"{user.id}"]["contact"]}\nТема: {call_requests[f"{user.id}"]["subject"]}', reply_markup=markup)

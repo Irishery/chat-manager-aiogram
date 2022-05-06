@@ -1,5 +1,6 @@
 from aiogram import types
 from misc import *
+from .manager_chat import users_in_chat
 import csv
 import funk
 import keyboard
@@ -118,11 +119,8 @@ async def callback_btn(call: types.CallbackQuery, state: FSMContext):
             all_reviews = funk.see_rew(number_file_read)
             rev = all_reviews[0]
             reviews = funk.sort_reviews(all_reviews)
-            print('ok3')
             if len(all_reviews) <= 3:
                 pag = False
-                print('ok4')
-                print(rev[0], rev[1])
                 await bot.delete_message(id_user, message_id=call.message.message_id)
                 await bot.send_photo(id_user, rev[0], rev[1],
                                      reply_markup=keyboard.pagination(number=0,
@@ -131,9 +129,6 @@ async def callback_btn(call: types.CallbackQuery, state: FSMContext):
                                                                       prew='1',
                                                                       pag=pag))
             else:
-                print('ok4')
-                print(rev[0], '|', rev[1])
-                print(rev)
                 await bot.delete_message(id_user, message_id=call.message.message_id)
                 await bot.send_photo(id_user, rev[0], rev[1],
                                      reply_markup=keyboard.pagination(number=0,
@@ -144,8 +139,7 @@ async def callback_btn(call: types.CallbackQuery, state: FSMContext):
             await call.answer()
 
         except Exception as e:
-            print("asdasd", e)
-            raise e
+            print(e)
             await call.answer('Нет отзывов', )
 
     elif data[0] == "main_menu":
@@ -161,7 +155,7 @@ async def callback_btn(call: types.CallbackQuery, state: FSMContext):
     elif data[0] == "callme_name":
         await bot.delete_message(id_user, message_id=call.message.message_id)
         await call.message.answer(
-            'Ответьте на вопросы ниже, чтобы оставить заявку на звонок. Если хотите вернуться, то нажмите кнопку «Отменить»',
+            'Ответьте на вопросы ниже, чтобы оставить заявку на звонок. Если хотите вернуться, то нажмите кнопку «Отменить».',
             reply_markup=keyboard.call_state())
         await call.message.answer('Как вас зовут?')
         await Form.callme_name.set()
@@ -204,8 +198,8 @@ async def callback_btn(call: types.CallbackQuery, state: FSMContext):
     elif data[0] == "sendtogroup":
         await bot.delete_message(id_user, message_id=call.message.message_id)
         await call.message.answer(
-            'Спасибо. Мы приняли вашу заявку, ожидайте звонок. Обычно мы перезваниваем в течение 12-24 часов, но в связи с большим кол-вом заявок могут быть задержки.',
-            reply_markup=keyboard.main())
+            'Спасибо. Мы приняли вашу заявку, ожидайте звонок. Обычно мы перезваниваем в течении 12-24 часов, но в связи с большим кол-вом заявок могут быть задержки.',
+            reply_markup=keyboard.menu_back())
 #        for msg in msgs_to_del[id_user]:
 #            await bot.delete_message(id_user, message_id=msg)
 #        msgs_to_del[id_user] = []
@@ -215,22 +209,35 @@ async def callback_btn(call: types.CallbackQuery, state: FSMContext):
 
         async with state.proxy() as data:
             print(data)
-            # await bot.send_message(-1001624336092, "{} \n\nзаявку отправил:\nUserId: {}\nName: {}\nUserName: @{}".format(user_message, user.id, user['first_name'], user['username']))
+            #await bot.send_message(-1001624336092, "{} \n\nзаявку отправил:\nUserId: {}\nName: {}\nUserName: @{}".format(user_message, user.id, user['first_name'], user['username']))
 
             await user_methods.send_message(id=user.id, text=("{} \n\nзаявку отправил:\nUserId: {}\nName: {}\nUserName: @{}".format(data['text'], user.id, user['first_name'], user['username'])),
                                         nickname=user['first_name'], is_call=True, contact=data['contact'], name=data['name'])
         await state.finish()
 
     elif data[0] == "feedback":
-        await bot.edit_message_text('Напишите ваш вопрос и мы ответим вам в ближайшее время.\nОбычно мы отвечаем в течение дня, но в связи с большим кол-вом заявок ответ может задержаться', call.message.chat.id, call.message.message_id)
-        await bot.edit_message_reply_markup(call.message.chat.id,
-                                    call.message.message_id,
-                                    reply_markup=keyboard.chat_state())
+        if str(id_user) not in users_in_chat.keys():
+            users_in_chat[str(id_user)] = 2
+        await bot.edit_message_text('_Напишите ваш вопрос и мы ответим вам в ближайшее время.\nОбычно мы отвечаем в течении дня, но в связи с большим кол-вом заявок ответ может задержаться._', call.message.chat.id, call.message.message_id, parse_mode="Markdown")
+        await bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=keyboard.chat_state())
         await Form.feedback.set()
-    
-    elif data[0] == "stop_chatting":
+
+    elif data[0] == "feedback_manager_first":
+        if str(id_user) not in users_in_chat.keys():
+            users_in_chat[str(id_user)] = True
+        #await bot.edit_message_text('_Напишите ваш вопрос и мы ответим вам в ближайшее время.\nОбычно мы отвечаем в аем в течение дня, но в связи с большим кол-вом заявок ответ может задержаться_', call.message.chat.id, call.message.message_id, parse_mode="Markdown")
+        #await bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=keyboard.chat_state())
         await bot.delete_message(id_user, message_id=call.message.message_id)
-        await bot.send_message(id_user, 'Чат прерван. Чтобы опять связаться с нашим менеджером, нажмите кнопку «Написать нам.». ')
+
+        await Form.feedback.set()
+
+    elif data[0] == "stop_chatting":
+        try:
+            users_in_chat.pop(str(id_user))
+        except KeyError:
+            pass
+        await bot.delete_message(id_user, message_id=call.message.message_id)
+        await bot.send_message(id_user, '_Чат прерван. Чтобы опять связаться с нашим менеджером, нажмите кнопку «Написать нам»._', parse_mode="Markdown")
         await call.message.answer(
             'Выберите и нажмите на кнопку ниже!',
             reply_markup=keyboard.menu_start())
@@ -238,10 +245,10 @@ async def callback_btn(call: types.CallbackQuery, state: FSMContext):
     
     elif data[0] == "stop_call":
         await bot.delete_message(id_user, message_id=call.message.message_id)
-        await call.message.answer(
-            'Запрос отменен',
-            reply_markup=keyboard.menu_back())
         await call.message.answer('Запрос отменен', reply_markup=keyboard.main())
+        await call.message.answer(
+            'Чтобы вернуться к главному меню, нажмите на кнопку ниже.',
+            reply_markup=keyboard.menu_back())
         
 #        for msg in msgs_to_del[id_user]:
 #            await bot.delete_message(id_user, message_id=msg)

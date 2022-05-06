@@ -120,3 +120,10 @@ def main():
     row = types.KeyboardButton(text='Главная', callback_data='stop_chatting')
     keyboard.row(row)
     return keyboard
+
+
+def first_msg():
+    keyboard = types.InlineKeyboardMarkup(resize_keyboard=True)
+    row = [types.InlineKeyboardButton(text='Продолжить общение', callback_data='feedback_manager_first')]
+    keyboard.row(*row)
+    return keyboard
